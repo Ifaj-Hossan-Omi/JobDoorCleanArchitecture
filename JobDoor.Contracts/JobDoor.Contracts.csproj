@@ -10,4 +10,8 @@
     <Folder Include="Common\ServiceResponse\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JobDoor.Domain\JobDoor.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

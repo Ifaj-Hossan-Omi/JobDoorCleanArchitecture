@@ -2,6 +2,7 @@
 using JobDoor.Contracts.Authentication;
 using JobDoor.Contracts.Common.ServiceResponse;
 using JobDoor.Domain.Entity;
+using JobDoor.Domain.Enum;
 using JobDoor.Infrastructure.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,17 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<ServiceResponse<int>>> Register(UserRegisterRequest request)
     {
         var response = await _authRepository.Register(
-            new User { Username = request.Username },
+            new User
+            {
+                Username = request.Username,
+                Type = request.Type
+                // Type = request.Type switch
+                // {
+                //     "JobSeeker" => UserType.JobSeeker,
+                //     "JobProvider" => UserType.JobProvider,
+                //     _ => UserType.JobSeeker
+                // }
+            },
             request.Password
         );
 

@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 
-namespace JobDoor.Infrastructure.Repository;
+namespace JobDoor.Infrastructure.Repository.Authentication;
 
 public class AuthRepository : IAuthRepository
 {
@@ -121,14 +121,14 @@ public class AuthRepository : IAuthRepository
     }
     private void CreatePassword(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
-        using var hmac = new System.Security.Cryptography.HMACSHA512();
+        using var hmac = new HMACSHA512();
         passwordSalt = hmac.Key;
         passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
     }
 
     private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
-        using var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt);
+        using var hmac = new HMACSHA512(passwordSalt);
         var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
         return computedHash.SequenceEqual(passwordHash);
     }

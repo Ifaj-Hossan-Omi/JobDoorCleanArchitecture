@@ -1,13 +1,10 @@
-﻿using JobDoor.Application;
-using JobDoor.Application.Common.Interface;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace JobDoor.Presentation.Controllers
+namespace JobDoor.Presentation.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class JobProviderController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class JobProviderController : ControllerBase
-    {
-    }
+
 }

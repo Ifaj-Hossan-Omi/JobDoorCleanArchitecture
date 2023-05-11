@@ -1,13 +1,13 @@
-﻿using JobDoor.Domain.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JobDoor.Application.Service;
+using JobDoor.Domain.Entity;
 
-namespace JobDoor.Application.Common.Interface.Repository
+namespace JobDoor.Application.Common.Interface.Repository;
+
+public interface IJobProviderRepository
 {
-    public interface IJobProviderRepository
-    {
-    }
+    Task<List<JobProvider>?> GetAllJobProvider();
+    Task<JobProvider?> GetById(Guid id);
+    Task<List<JobProvider>> AddJobProvider(JobProvider newCharacter);
+    // Task<JobProvider> UpdateJobProvider(JobProvider updatedCharacter);
+    // Task<List<JobProvider>> DeleteJobProvider(Guid id, Guid userId);
 }

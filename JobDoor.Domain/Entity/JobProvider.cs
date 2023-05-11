@@ -1,4 +1,6 @@
-﻿namespace JobDoor.Domain.Entity;
+﻿using JobDoor.Domain.Enum;
+
+namespace JobDoor.Domain.Entity;
 
 public class JobProvider
 {
@@ -9,5 +11,5 @@ public class JobProvider
     public string PhoneNumber { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-
+    public User? User { get; set; }
 }

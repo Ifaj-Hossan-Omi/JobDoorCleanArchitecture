@@ -1,7 +1,9 @@
-﻿namespace JobDoor.Contracts.Authentication;
+﻿using JobDoor.Domain.Enum;
 
-public record UserRegisterRequest
-{
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-}
+namespace JobDoor.Contracts.Authentication;
+
+public record UserRegisterRequest(
+    string Username, 
+    string Password, 
+    UserType Type
+);

@@ -1,5 +1,5 @@
 ﻿using JobDoor.Application.Common.Interface.Authentication;
-using JobDoor.Infrastructure.Repository;
+using JobDoor.Infrastructure.Repository.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 namespace JobDoor.Infrastructure;
 

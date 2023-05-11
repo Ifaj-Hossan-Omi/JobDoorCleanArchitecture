@@ -12,6 +12,8 @@ public class DataContext : DbContext
 
     }
     public DbSet<User> Users => Set<User>();
+    public DbSet<JobProvider> JobProviders => Set<JobProvider>();
+    public DbSet<JobSeeker> JobSeekers => Set<JobSeeker>();
 }
 
 public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
