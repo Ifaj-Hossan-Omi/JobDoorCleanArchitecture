@@ -13,10 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JobDoor.Contracts\JobDoor.Contracts.csproj" />
     <ProjectReference Include="..\JobDoor.Domain\JobDoor.Domain.csproj" />
   </ItemGroup>
 

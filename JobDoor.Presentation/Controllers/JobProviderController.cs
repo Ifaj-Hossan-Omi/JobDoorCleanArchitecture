@@ -9,18 +9,5 @@ namespace JobDoor.Presentation.Controllers
     [ApiController]
     public class JobProviderController : ControllerBase
     {
-        private readonly IJobProviderRepository _jobProvider;
-
-        public JobProviderController(IJobProviderRepository jobProvider)
-        {
-            _jobProvider = jobProvider;
-        }
-
-
-        [HttpGet("Provider")]
-        public ActionResult Get()
-        {
-            return Ok(_jobProvider.NewProvider());
-        }
     }
 }

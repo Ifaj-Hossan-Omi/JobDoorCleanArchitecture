@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using JobDoor.Application.Common.Interface.Authentication;
+using JobDoor.Infrastructure.Repository;
+using Microsoft.Extensions.DependencyInjection;
 namespace JobDoor.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        // services.AddScoped<IUserService, UserService>();
-        // services.AddScoped<ICharacterService, CharacterService>();
-        // services.AddScoped<IFightService, FightService>();
+        services.AddScoped<IAuthRepository, AuthRepository>();
 
         return services;
     }
