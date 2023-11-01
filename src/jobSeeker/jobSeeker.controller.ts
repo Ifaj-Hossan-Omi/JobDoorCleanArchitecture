@@ -3,19 +3,16 @@ import { JobSeekerService } from './jobSeeker.service';
 import { JobSeeker } from './jobSeeker.dto';
 import { ApplyJob } from './applyJob.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common/decorators';
+import { Delete, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common/decorators';
 import { MulterError, diskStorage } from 'multer';
 import { Res } from '@nestjs/common';
 import { ParseIntPipe } from '@nestjs/common';
+import { create } from 'domain';
+import { Job } from './job.dto';
 
 @Controller()
 export class JobSeekerController {
-  constructor(private readonly appService: JobSeekerService) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+  constructor(private readonly jobSeekerService: JobSeekerService) {}
 
   @Get('/jobs')
   getJobs(): object[] {
@@ -25,7 +22,7 @@ export class JobSeekerController {
   @Post('/createNewJobSeeker')
   @UsePipes(new ValidationPipe())
   createNewJobSeeker(@Body() jobSeeker: JobSeeker): object {
-    return jobSeeker;
+    return this.jobSeekerService.createJobSeeker(jobSeeker);
   }
 
   @Get('/employeeNumber/:number')
@@ -44,8 +41,8 @@ export class JobSeekerController {
   }
 
   @Patch('/profile/updatePassword')
-  updatePassword(@Body() jobseeker: JobSeeker): object {
-    return {};
+  updatePassword(@Body() userpass: object): object {
+    return this.jobSeekerService.updatePassword(userpass);
   }
 
   @Post('/applyJob')
@@ -68,9 +65,9 @@ export class JobSeekerController {
     return {};
   }
 
-  @Post('/deleteJobSeeker')
+  @Delete('/deleteJobSeeker')
   deleteJobSeeker(@Body() jobSeeker: JobSeeker) {
-    
+    this.jobSeekerService.deleteJobSeeker(jobSeeker.username);
   }
 
   @Get('/jobs/offers/:username')

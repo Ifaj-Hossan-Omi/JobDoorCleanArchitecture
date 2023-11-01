@@ -9,7 +9,7 @@ export class JobSeeker{
     email: string;
     @Matches(/^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/)
     password: string;
-    @Matches(/^[0-9]$/)
+    @Matches(/^[0-9]{11}$/)
     phone: string;
     @IsString()
     location: string;
@@ -21,6 +21,6 @@ export class JobSeeker{
     education: string[];
     @IsString()
     resume: string;
-    @IsString({each:true})
+    
     appliedJobs: string[];
 }
