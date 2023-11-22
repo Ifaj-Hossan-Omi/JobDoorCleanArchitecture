@@ -1,21 +1,26 @@
 import { IsString, Matches, IsNumber, IsDate, IsIn } from 'class-validator';
+import { JobSeeker } from './jobSeeker.entity';
+import { ManyToMany } from 'typeorm';
 
-export class Job{
+export class JobDTO {
     @IsString()
     id: string;
     @IsString()
     name: string;
     @IsString()
+    domain: string;
+    @IsString()
     description: string;
-    @IsNumber()
-    salary: number;
+    @IsString()
+    salary: string;
     @IsString()
     location: string;
+    @IsIn(['remote', 'on-site', 'hybrid'])
+    workLocation: string;
     @IsString()
     company: string;
     @IsDate()
     postedDate: Date;
-    @IsIn(['Full Time', 'Part Time', 'Internship'])
+    @IsIn(['full-time', 'part-time', 'internship', 'contract', 'temporary', 'volunteer', 'per-diem', 'other'])
     jobPeriod: string;
-
 }

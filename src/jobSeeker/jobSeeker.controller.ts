@@ -1,112 +1,244 @@
-import { Body, Controller, Get, Param, Post, Put, Patch, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Patch, Query, ValidationPipe, Session, Req, UnauthorizedException, ParseIntPipe, Res, HttpException, HttpStatus } from '@nestjs/common';
 import { JobSeekerService } from './jobSeeker.service';
-import { JobSeeker } from './jobSeeker.dto';
+import { JobSeekerDTO } from './jobSeeker.dto';
+import { AddressDTO } from './address.dto';
+import { ExperienceDTO } from './experience.dto';
+import { JobPreferencesDTO } from './jobPreferences.dto';
 import { ApplyJob } from './applyJob.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Delete, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common/decorators';
+import { Delete, UploadedFile, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common/decorators';
 import { MulterError, diskStorage } from 'multer';
-import { Res } from '@nestjs/common';
-import { ParseIntPipe } from '@nestjs/common';
+import session from 'express-session';
+import { SessionGuard } from './session.guard';
 import { create } from 'domain';
-import { Job } from './job.dto';
+import { JobDTO } from './job.dto';
+import { userpass } from './userpass.dto';
 
-@Controller()
+@Controller('jobSeeker')
 export class JobSeekerController {
   constructor(private readonly jobSeekerService: JobSeekerService) {}
 
-  @Get('/jobs')
-  getJobs(): object[] {
-    return [{},{}];
-  }
-
-  @Post('/createNewJobSeeker')
-  @UsePipes(new ValidationPipe())
-  createNewJobSeeker(@Body() jobSeeker: JobSeeker): object {
-    return this.jobSeekerService.createJobSeeker(jobSeeker);
-  }
-
-  @Get('/employeeNumber/:number')
-  employeeNumber(@Param('number', ParseIntPipe) number: number): object[] {
-    return [];
-  }
-
-  @Get('/profile/:username')
-  showProfile(@Param('username') username:string ): object {
-    return {};
+  @Get('/profile')
+  @UseGuards(SessionGuard)
+  showProfile(@Query('id') id:string ): object {
+    const res = this.jobSeekerService.getJobSeeker(id);
+    if(res!==null){
+      return res;
+    }
+    else {
+      throw new HttpException('Job Seeker Not Found', HttpStatus.NOT_FOUND);
+    }
   }
 
   @Put('/profile/update')
-  updateProfile(@Body() jobseeker: JobSeeker): object {
-    return {};
+  @UseGuards(SessionGuard)
+  updateProfile(@Body() jobseeker: JobSeekerDTO): void {
+    this.jobSeekerService.updateProfile(jobseeker);
   }
 
-  @Patch('/profile/updatePassword')
-  updatePassword(@Body() userpass: object): object {
-    return this.jobSeekerService.updatePassword(userpass);
-  }
-
-  @Post('/applyJob')
-  applyJob(@Body() applyJob:ApplyJob ): object {
-    return {};
-  }
-
-  @Get('/jobs/applied/:username')
-  showAppliedJobs(@Param('username') username: string): object[] {
-    return [{},{}];
-  }
-
-  @Get('/searchJobs')
-  searchJobs(@Query('name') name: string): object[] {
-    return [{},{}];
-  }
-
-  @Get('/dashboard/:username')
-  dashboard(@Param('username') username: string): object {
-    return {};
+  @Post('/profile/updatePassword')
+  @UseGuards(SessionGuard)
+  updatePassword(@Body() userpass:userpass): void {
+    this.jobSeekerService.updatePassword(userpass);
   }
 
   @Delete('/deleteJobSeeker')
-  deleteJobSeeker(@Body() jobSeeker: JobSeeker) {
-    this.jobSeekerService.deleteJobSeeker(jobSeeker.username);
+  @UseGuards(SessionGuard)
+  deleteJobSeeker(@Session() session): void {
+    this.jobSeekerService.deleteJobSeeker(session.email);
+    session.destroy();
   }
 
-  @Get('/jobs/offers/:username')
-  getJobOffers(@Param('username') username: string): object[] {
-    return [{},{}];
-  }
-
-  @Get('/connections/:username')
-  getConnections(@Param('username') username: string): object[] {
-    return [{},{}];
-  }
-
-  @Post('/upload/resume')
-  @UseInterceptors(FileInterceptor('file', 
-  {
-    fileFilter: (req, file, cb) => {
-      if (!file.originalname.match(/\.(pdf)$/)) {
-        cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'Only pdf files are allowed'), false);
-      } else {
-        cb(null, true);
-      }
-    },
-    limits: { fileSize: 2*1024*1024 },
-      storage:diskStorage({
-      destination: './uploads/resume',
-      filename: (req, file, cb) => {
-        cb(null, Date.now()+file.originalname);
+  @Post('/upload/resume')  
+  @UseGuards(SessionGuard)
+  @UseInterceptors(FileInterceptor('file',
+    {
+      fileFilter: (req, file, cb) => {
+        if (file.originalname.match(/^.*\.(pdf)$/))
+          cb(null, true);
+        else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'pdf'), false);
+        }
       },
-    }),
-  }))
-  UploadFile(@UploadedFile() file: Express.Multer.File) {
+      limits: { fileSize: 2*1024*1024 },
+      storage: diskStorage({
+        destination: './uploads/resume',
+        filename: function (req, file, cb) {
+          cb(null, Date.now() + file.originalname)
+        },
+      })
+    }))
+  uploadResume(@UploadedFile() file: Express.Multer.File, @Session() session) {
     console.log(file);
+    this.jobSeekerService.uploadResume(file.filename, session.email);
   }
 
-  @Get('/resume/:filename')
-  downloadResume(@Param('filename') filename, @Res() res) {
+  @Get('/resume')
+  @UseGuards(SessionGuard)
+  downloadResume(@Query('filename') filename, @Res() res) {
     res.sendFile(filename, { root: './uploads/resume'})
   }
 
+  @Get('/jobs/:salary')
+  @UseGuards(SessionGuard)
+  getJobsBySalary(@Param('salary', ParseIntPipe) salary: number): object {
+    return this.jobSeekerService.getJobsBySalary(salary);
+  }
+
+  @Post('/signup')
+  @UsePipes(new ValidationPipe())
+  jobSeekerSignup(@Body() jobSeeker: JobSeekerDTO){
+    const s:object = this.jobSeekerService.jobSeekerSignup(jobSeeker);
+    if(s==null){
+      throw new HttpException('User Already Exists', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('/signin')
+  jobSeekerSignin(@Body() jobSeeker: JobSeekerDTO, @Session() session){
+    const result = this.jobSeekerService.jobSeekerSignin(jobSeeker);
+    if(result){
+      //session.id = jobSeeker.id;
+      session.email = jobSeeker.email;
+      console.log(session.email);
+    }
+    return result;
+  }
+
+  @Post('/signout')
+  @UseGuards(SessionGuard)
+  jobSeekerSignout(@Req() req){
+    if(req.session.destroy()){
+      return true;
+    }
+    else{
+      throw new UnauthorizedException('invalid actions');
+    }
+  }
+
+  @Patch('/update/address')
+  @UseGuards(SessionGuard)
+  updateAddress(@Body() address: AddressDTO, @Session() session): void {
+    this.jobSeekerService.updateAddress(address, session.email);
+  }
+
+  @Patch('/update/experience')
+  @UseGuards(SessionGuard)
+  updateExperience(@Body() experience: ExperienceDTO[], @Session() session): void {
+    this.jobSeekerService.updateExperience(experience, session.email);
+  }
+
+  @Patch('/update/jobPreferences')
+  @UseGuards(SessionGuard)
+  updateJobPreferences(@Body() jobPreferences: JobPreferencesDTO[], @Session() session): void {
+    this.jobSeekerService.updateJobPreferences(jobPreferences, session.email);
+  }
+
+  @Get('/jobApplications')
+  @UseGuards(SessionGuard)
+  getJobApplications(@Session() session): object {
+    return this.jobSeekerService.getJobApplications(session.email);
+  }
+
+  @Post('/applyJob')
+  @UseGuards(SessionGuard)
+  applyJob(@Body() job: JobDTO, @Session() session): void {
+    this.jobSeekerService.applyJob(job, session.email);
+  }
+
+  @Get('/profile/jobPreferences')
+  @UseGuards(SessionGuard)
+  getJobPreferences(@Session() session): object {
+    return this.jobSeekerService.getJobPreferences(session.email);
+  }
+
+  @Get('/profile/experience')
+  @UseGuards(SessionGuard)
+  getExperience(@Session() session): object {
+    return this.jobSeekerService.getExperience(session.email);
+  }
+
+  @Get('/profile/address')
+  @UseGuards(SessionGuard)
+  getAddress(@Session() session): object {
+    return this.jobSeekerService.getAddress(session.email);
+  }
+
+  @Get('/jobs')
+  @UseGuards(SessionGuard)
+  getJobs(): object {
+    return this.jobSeekerService.getJobs();
+  }
+
+  @Get('/jobs/preferred')
+  @UseGuards(SessionGuard)
+  getPreferredJobs(@Body() jobPreference: JobPreferencesDTO): object {
+    return this.jobSeekerService.getPreferredJobs(jobPreference);
+  }
+
+  @Post('demoJob')
+  demoJobPopulate(@Body() job: JobDTO): void {
+    this.jobSeekerService.demoJobPopulate(job);
+  }
+
+  @Patch('upload/profilePicture')
+  @UseGuards(SessionGuard)
+  @UseInterceptors(FileInterceptor('file',
+    {
+      fileFilter: (req, file, cb) => {
+        if (file.originalname.match(/^.*\.(jpg|png|jpeg)$/))
+          cb(null, true);
+        else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false);
+        }
+      },
+      limits: { fileSize: 4*1024*1024 },
+      storage: diskStorage({
+        destination: './uploads/profilePicture',
+        filename: function (req, file, cb) {
+          cb(null, Date.now() + file.originalname)
+        },
+      })
+    }))
+  uploadProfilePicture(@UploadedFile() file: Express.Multer.File, @Session() session) {
+    console.log(file);
+    this.jobSeekerService.uploadProfilePicture(file.filename, session.email);
+  }
 
 
+  @Get('/profilePicture')
+  @UseGuards(SessionGuard)
+  getProfilePicture(@Query('filename') filename, @Res() res) {
+    res.sendFile(filename, { root: './uploads/profilePicture'})
+  }
+
+  @Patch('/upload/coverPhoto')
+  @UseGuards(SessionGuard)
+  @UseInterceptors(FileInterceptor('file',
+    {
+      fileFilter: (req, file, cb) => {
+        if (file.originalname.match(/^.*\.(jpg|png|jpeg)$/))
+          cb(null, true);
+        else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false);
+        }
+      },
+      limits: { fileSize: 4*1024*1024 },
+      storage: diskStorage({
+        destination: './uploads/coverPhoto',
+        filename: function (req, file, cb) {
+          cb(null, Date.now() + file.originalname)
+        },
+      })
+    }))
+  UploadCoverPhoto(@UploadedFile() file: Express.Multer.File, @Session() session) {
+    console.log(file);
+    this.jobSeekerService.uploadCoverPhoto(file.filename, session.email);
+  }
+
+  @Get('/coverPhoto')
+  @UseGuards(SessionGuard)
+  getCoverPhoto(@Query('filename') filename, @Res() res) {
+    res.sendFile(filename, { root: './uploads/coverPhoto'})
+  }
 }
