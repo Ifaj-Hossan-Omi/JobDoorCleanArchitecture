@@ -62,8 +62,7 @@ export class JobSeekerService {
   }
 
   async getJobsBySalary(salary: number): Promise<Job[]> {
-    const sal:string = salary.toString();
-    return await this.jobRepository.find({ where: { salary: MoreThanOrEqual(sal) } });
+    return await this.jobRepository.find({ where: { salary: MoreThanOrEqual(salary) } });
   }
 
   async jobSeekerSignup(jobSeeker: JobSeekerDTO): Promise<JobSeeker> {
@@ -158,7 +157,8 @@ export class JobSeekerService {
     return await this.jobRepository.find();
   }
 
-  async getPreferredJobs(jobPreference: JobPreferencesDTO): Promise<Job[]> {
+  async getPreferredJobs(jobPreference: any): Promise<Job[]> {
+    console.log(jobPreference);
     return await this.jobRepository.find(
       {
         where: {
@@ -168,6 +168,7 @@ export class JobSeekerService {
         }
       }
     );
+    return null;
   }
 
   async updateJobPreferences(jobPreferences: JobPreferencesDTO[], email: string): Promise<void> {
@@ -238,6 +239,7 @@ export class JobSeekerService {
   }
 
   async applyJob(job: JobDTO, session): Promise<void> {
+    try{
     const user: JobSeekerDTO = await this.jobSeekerRepository.findOneBy({ email: session.email });
     if(user!=null){
       const application: ApplicationHistoryDTO = new ApplicationHistoryDTO();
@@ -247,6 +249,8 @@ export class JobSeekerService {
       application.jobSeeker = user;
       user.applicationHistory.push(application);
       await this.jobSeekerRepository.save(user);
+    }} catch(err){
+      console.error('error during apply', err);
     }
   }
 

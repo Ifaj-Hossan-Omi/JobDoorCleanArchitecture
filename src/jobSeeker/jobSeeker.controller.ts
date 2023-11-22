@@ -80,7 +80,7 @@ export class JobSeekerController {
   }
 
   @Get('/jobs/:salary')
-  @UseGuards(SessionGuard)
+  //@UseGuards(SessionGuard)
   getJobsBySalary(@Param('salary', ParseIntPipe) salary: number): object {
     return this.jobSeekerService.getJobsBySalary(salary);
   }
@@ -165,13 +165,13 @@ export class JobSeekerController {
   }
 
   @Get('/jobs')
-  @UseGuards(SessionGuard)
+  //@UseGuards(SessionGuard)
   getJobs(): object {
     return this.jobSeekerService.getJobs();
   }
 
-  @Get('/jobs/preferred')
-  @UseGuards(SessionGuard)
+  @Post('/jobs/preferred')
+  
   getPreferredJobs(@Body() jobPreference: JobPreferencesDTO): object {
     return this.jobSeekerService.getPreferredJobs(jobPreference);
   }

@@ -14,8 +14,8 @@ export class Job {
   @Column()
   description: string;
 
-  @Column()
-  salary: string;
+  @Column({type: 'decimal'})
+  salary: number;
 
   @Column()
   location: string;

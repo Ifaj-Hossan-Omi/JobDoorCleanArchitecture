@@ -23,6 +23,5 @@ export class Address {
     postalCode: string;
 
     @OneToOne(() => JobSeeker, jobSeeker => jobSeeker.address)
-    @JoinColumn()
     jobSeeker: JobSeeker;
 }

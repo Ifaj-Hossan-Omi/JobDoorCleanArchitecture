@@ -11,8 +11,8 @@ export class JobDTO {
     domain: string;
     @IsString()
     description: string;
-    @IsString()
-    salary: string;
+    @IsNumber()
+    salary: number;
     @IsString()
     location: string;
     @IsIn(['remote', 'on-site', 'hybrid'])

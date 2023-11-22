@@ -12,8 +12,8 @@ export class JobPreferencesDTO {
     @IsIn(['full-time', 'part-time', 'internship', 'contract', 'temporary', 'volunteer', 'per-diem', 'other'])
     jobTypes: string[];
 
-    @IsString()
-    desiredSalary: string;
+    @IsNumber()
+    desiredSalary: number;
 
     @IsArray()
     locations: string[];

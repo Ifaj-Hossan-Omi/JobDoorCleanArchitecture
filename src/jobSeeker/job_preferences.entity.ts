@@ -13,8 +13,8 @@ export class JobPreferences {
     @Column('simple-array')
     jobTypes: string[];
 
-    @Column()
-    desiredSalary: string;
+    @Column({type: 'decimal'})
+    desiredSalary: number;
 
     @Column('simple-array')
     locations: string[];
