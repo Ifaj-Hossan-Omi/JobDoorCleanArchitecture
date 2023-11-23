@@ -1,0 +1,231 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Infrastructure\\JobDoor.Infrastructure.csproj": {}
+  },
+  "projects": {
+    "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Application\\JobDoor.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Application\\JobDoor.Application.csproj",
+        "projectName": "JobDoor.Application",
+        "projectPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Application\\JobDoor.Application.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Contracts\\JobDoor.Contracts.csproj": {
+                "projectPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Contracts\\JobDoor.Contracts.csproj"
+              },
+              "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Domain\\JobDoor.Domain.csproj": {
+                "projectPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Domain\\JobDoor.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.416\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Contracts\\JobDoor.Contracts.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Contracts\\JobDoor.Contracts.csproj",
+        "projectName": "JobDoor.Contracts",
+        "projectPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Contracts\\JobDoor.Contracts.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Contracts\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Domain\\JobDoor.Domain.csproj": {
+                "projectPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Domain\\JobDoor.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.416\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Domain\\JobDoor.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Domain\\JobDoor.Domain.csproj",
+        "projectName": "JobDoor.Domain",
+        "projectPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Domain\\JobDoor.Domain.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.416\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Infrastructure\\JobDoor.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Infrastructure\\JobDoor.Infrastructure.csproj",
+        "projectName": "JobDoor.Infrastructure",
+        "projectPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Infrastructure\\JobDoor.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Application\\JobDoor.Application.csproj": {
+                "projectPath": "D:\\Adv Web Project\\JobDoorCleanArchitecture\\JobDoor.Application\\JobDoor.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.416\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
