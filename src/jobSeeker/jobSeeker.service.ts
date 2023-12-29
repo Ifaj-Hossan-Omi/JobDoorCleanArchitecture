@@ -1,6 +1,6 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, MoreThanOrEqual, Repository } from 'typeorm';
+import { In, Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { JobSeeker } from './jobSeeker.entity';
 import { JobApplication } from './job_application.entity';
 import { Job } from './job.entity';
@@ -16,6 +16,7 @@ import { JobDTO } from './job.dto';
 import { send } from 'process';
 import { unlink } from 'fs';
 import { Address } from './address.entity';
+import { JobPreferences } from './job_preferences.entity';
 
 @Injectable()
 export class JobSeekerService {
@@ -24,6 +25,8 @@ export class JobSeekerService {
     private jobSeekerRepository: Repository<JobSeeker>,
     @InjectRepository(Job) 
     private jobRepository: Repository<Job>,
+    @InjectRepository(JobPreferences)
+    private jobPreferencesRepository: Repository<JobPreferences>,
     @InjectRepository(Address)
     private addressRepository: Repository<Address>,
     private mailerService: MailerService
@@ -65,16 +68,59 @@ export class JobSeekerService {
     return await this.jobRepository.find({ where: { salary: MoreThanOrEqual(salary) } });
   }
 
+  async usernameExist(jobSeeker: JobSeekerDTO): Promise<boolean> {
+    const user: JobSeekerDTO = await this.jobSeekerRepository.findOneBy({ id: jobSeeker.id });
+    if(user!=null){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  async emailExist(jobSeeker: JobSeekerDTO): Promise<boolean> {
+    const user: JobSeekerDTO = await this.jobSeekerRepository.findOneBy({ email: jobSeeker.email });
+    if(user!=null){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  async jobSearch(search: string): Promise<Job[]> {
+    const lowercaseSearch = search.toLowerCase();
+    return await this.jobRepository.createQueryBuilder("job")
+      .where("LOWER(job.name) LIKE :search", { search: `%${lowercaseSearch}%` })
+      .orWhere("LOWER(job.domain) LIKE :search", { search: `%${lowercaseSearch}%` })
+      .orWhere("LOWER(job.description) LIKE :search", { search: `%${lowercaseSearch}%` })
+      .orWhere("LOWER(job.company) LIKE :search", { search: `%${lowercaseSearch}%` })
+      .getMany();
+  }
+
+  async getProfilePictureFilename(email: string): Promise<string> {
+    const user: JobSeekerDTO = await this.jobSeekerRepository.findOneBy({ email: email });
+    if(user!=null){
+      console.log(user.profilePicture);
+      return await user.profilePicture;
+    }
+    else{
+      return null;
+    }
+  }
+
   async jobSeekerSignup(jobSeeker: JobSeekerDTO): Promise<JobSeeker> {
     try{
       const user: JobSeekerDTO = await this.jobSeekerRepository.findOneBy({ id: jobSeeker.id });
       const user2: JobSeekerDTO = await this.jobSeekerRepository.findOneBy({ email: jobSeeker.email });
-      if(user || user2){
+      if(user){
         return null;
-      } else{
+      } 
+      else{
         const salt = await bcrypt.genSalt();
         jobSeeker.password = await bcrypt.hash(jobSeeker.password, salt);
         this.sendEmail(jobSeeker.email, 'Welcome to Job Door', 'Thank you for signing up with us. We hope you find your dream job soon.');
+        jobSeeker.profilePicture = 'emptyProfile.png';
         return this.jobSeekerRepository.save(jobSeeker);
       }
     } catch(err){
@@ -114,7 +160,7 @@ export class JobSeekerService {
 
   async jobSeekerSignin(jobSeeker: JobSeekerDTO): Promise<boolean> {
     const user: JobSeekerDTO = await this.jobSeekerRepository.findOneBy({ email: jobSeeker.email });
-    console.log(user);
+    //console.log(user);
     if(user!=null){
       const match: boolean = await bcrypt.compare(jobSeeker.password, user.password);
       return match;
@@ -172,14 +218,26 @@ export class JobSeekerService {
   }
 
   async updateJobPreferences(jobPreferences: JobPreferencesDTO[], email: string): Promise<void> {
+    console.log(email);
     const user: JobSeekerDTO = await this.jobSeekerRepository.findOneBy({ email: email });
+    console.log(user);
+    //console.log(jobPreferences[jobPreferences.length-1]);
+    
     if(user!=null){
+      //jobPreferences[jobPreferences.length-1].jobSeeker = user;
       user.jobPreferences = jobPreferences;
-      await this.jobSeekerRepository.save(user);
+      try{
+        await this.jobSeekerRepository.save(user);
+        await this.jobPreferencesRepository.delete({ jobSeekerId: null });
+      }
+      catch(err){
+        console.error(err);
+      }
     }
   }
 
   async demoJobPopulate(job: JobDTO): Promise<void> {
+    job.postedDate = new Date();
     await this.jobRepository.save(job);
   }
 

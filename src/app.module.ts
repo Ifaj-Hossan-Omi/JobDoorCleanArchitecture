@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JobSeekerModule } from './jobSeeker/jobSeeker.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Chat } from './jobSeeker/chat.entity';
 
 
 @Module({
@@ -15,6 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true,
       synchronize: true,
     } ),
+    TypeOrmModule.forFeature([Chat])
   ],
   controllers: [],
   providers: [],

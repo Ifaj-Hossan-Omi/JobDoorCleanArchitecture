@@ -24,4 +24,7 @@ export class JobPreferences {
 
     @ManyToOne(() => JobSeeker, jobSeeker => jobSeeker.jobPreferences)
     jobSeeker: JobSeeker;
+
+    @Column({ nullable: true })
+    jobSeekerId: string;
 }

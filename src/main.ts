@@ -14,7 +14,7 @@ async function bootstrap() {
       cookie: 
              { secure: false,
                httpOnly: false,
-               maxAge: 1000000
+               maxAge: 100000000
                }
     }),
      );

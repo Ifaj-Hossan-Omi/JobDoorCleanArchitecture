@@ -18,12 +18,13 @@ import { userpass } from './userpass.dto';
 export class JobSeekerController {
   constructor(private readonly jobSeekerService: JobSeekerService) {}
 
-  @Get('/profile')
+  @Post('/profile')
   @UseGuards(SessionGuard)
-  showProfile(@Query('id') id:string ): object {
-    const res = this.jobSeekerService.getJobSeeker(id);
+  async showProfile(@Req() req ): Promise<any> {
+    let res = await this.jobSeekerService.getJobSeekerIdByEmail(req.session.email);
+    const a = this.jobSeekerService.getJobSeeker(res);
     if(res!==null){
-      return res;
+      return a;
     }
     else {
       throw new HttpException('Job Seeker Not Found', HttpStatus.NOT_FOUND);
@@ -91,7 +92,21 @@ export class JobSeekerController {
     const s:object = this.jobSeekerService.jobSeekerSignup(jobSeeker);
     if(s==null){
       throw new HttpException('User Already Exists', HttpStatus.BAD_REQUEST);
+    } else {
+      return true;
     }
+  }
+
+  @Post('/usernameExist')
+  usernameExist(@Body() jobSeeker: JobSeekerDTO){
+    const res = this.jobSeekerService.usernameExist(jobSeeker);
+    return res;
+  }
+
+  @Post('/emailExist')
+  emailExist(@Body() jobSeeker: JobSeekerDTO){
+    const res = this.jobSeekerService.emailExist(jobSeeker);
+    return res;
   }
 
   @Post('/signin')
@@ -101,6 +116,8 @@ export class JobSeekerController {
       //session.id = jobSeeker.id;
       session.email = jobSeeker.email;
       console.log(session.email);
+      console.log(session);
+      console.log(session.id);
     }
     return result;
   }
@@ -109,11 +126,17 @@ export class JobSeekerController {
   @UseGuards(SessionGuard)
   jobSeekerSignout(@Req() req){
     if(req.session.destroy()){
+      console.log(true);
       return true;
     }
     else{
       throw new UnauthorizedException('invalid actions');
     }
+  }
+
+  @Get('/jobSearch/:search')
+  jobSearch(@Param('search') search: string): object {
+    return this.jobSeekerService.jobSearch(search);
   }
 
   @Patch('/update/address')
@@ -130,8 +153,19 @@ export class JobSeekerController {
 
   @Patch('/update/jobPreferences')
   @UseGuards(SessionGuard)
-  updateJobPreferences(@Body() jobPreferences: JobPreferencesDTO[], @Session() session): void {
-    this.jobSeekerService.updateJobPreferences(jobPreferences, session.email);
+  updateJobPreferences(@Body() jobPreferences: any, @Req() req): void {
+    
+    try{
+      const abc: JobPreferencesDTO[] = Object.values(jobPreferences);
+      
+      console.log(jobPreferences);
+      console.log(req.session.email);
+      console.log(abc);
+      this.jobSeekerService.updateJobPreferences(abc, req.session.email);
+    } catch(e){
+      throw new HttpException('Invalid Input', HttpStatus.BAD_REQUEST);
+    }
+    
   }
 
   @Get('/jobApplications')
@@ -148,8 +182,8 @@ export class JobSeekerController {
 
   @Get('/profile/jobPreferences')
   @UseGuards(SessionGuard)
-  getJobPreferences(@Session() session): object {
-    return this.jobSeekerService.getJobPreferences(session.email);
+  getJobPreferences(@Req() req): object {
+    return this.jobSeekerService.getJobPreferences(req.session.email);
   }
 
   @Get('/profile/experience')
@@ -206,9 +240,13 @@ export class JobSeekerController {
   }
 
 
+
   @Get('/profilePicture')
   @UseGuards(SessionGuard)
-  getProfilePicture(@Query('filename') filename, @Res() res) {
+  async getProfilePicture(@Req() req, @Res() res) {
+    console.log(req.session.email);
+    const filename = await this.jobSeekerService.getProfilePictureFilename(req.session.email);
+    console.log(filename);
     res.sendFile(filename, { root: './uploads/profilePicture'})
   }
 
